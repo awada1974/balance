@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Balance</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="full_name">Full Name</string>
+    <string name="total_amount">Total Amount</string>
+    <string name="add_payment">Add Payment</string>
+    <string name="save">Save</string>
+
+
+    <string name="name_error">Please enter a valid name</string>
+    <string name="phone_error">Please enter a valid phone number</string>
+    <string name="amount_error">Please enter an amount</string>
+    <string name="note">Note</string>
+    <string name="amount">Amount</string>
+    <string name="date">Date</string>
+</resources>
