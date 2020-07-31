@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Required;
 
 public class Payment extends RealmObject {
 
@@ -15,6 +16,8 @@ public class Payment extends RealmObject {
     private long id;
     private long amount;
     private String created_at;
+    private String personName;
+    private int currency;
 
 
     public Payment() {
@@ -46,5 +49,21 @@ public class Payment extends RealmObject {
 
     public void setCreated_at(String created_at) {
         this.created_at = created_at;
+    }
+
+    public String getPersonName() {
+        return personName;
+    }
+
+    public void setPersonName(String personName) {
+        this.personName = personName;
+    }
+
+    public int getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(int currency) {
+        this.currency = currency;
     }
 }

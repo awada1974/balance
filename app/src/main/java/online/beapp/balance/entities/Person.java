@@ -79,4 +79,12 @@ public class Person extends RealmObject {
     public void setPayments(RealmList<Payment> payments) {
         this.payments = payments;
     }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 }

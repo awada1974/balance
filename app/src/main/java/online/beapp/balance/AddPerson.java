@@ -1,7 +1,10 @@
 package online.beapp.balance;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -34,12 +37,12 @@ public class AddPerson extends AppCompatActivity implements CreatePayment, View.
     Person person = new Person();
     ListView paymentListView;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_person);
         realm = Realm.getDefaultInstance();
-
         fullNameEditText = findViewById(R.id.editTextName);
         phoneNumberEditText = findViewById(R.id.editTextPhoneNumber);
         totalAmountEditText = findViewById(R.id.amountEditText);
@@ -47,23 +50,46 @@ public class AddPerson extends AppCompatActivity implements CreatePayment, View.
         addPaymentButton = findViewById(R.id.buttonAddPayment);
         savePaymentButton = findViewById(R.id.buttonSave);
         paymentListView = findViewById(R.id.paymentListView);
+        paymentListView.setNestedScrollingEnabled(true);
         addPaymentButton.setOnClickListener(this);
         savePaymentButton.setOnClickListener(this);
 
         adapter = new PaymentAdapter(this, paymentsArray);
         paymentListView.setAdapter(adapter);
+
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("person")) {
+            long id = intent.getLongExtra("person", 0);
+            Log.e(TAG, String.valueOf(person.getId()));
+            person = realm.where(Person.class).equalTo("id",id).findFirst();
+            fullNameEditText.setText(person.getName());
+            phoneNumberEditText.setText(person.getPhoneNumber());
+            totalAmountEditText.setText(String.valueOf(person.getAmount()));
+            noteEditText.setText(person.getNote());
+            paymentsArray.addAll(person.getPayments());
+            adapter.notifyDataSetChanged();
+
+        }
     }
 
     public void createPayment(Payment payment) {
+
         if(person == null) {
             return;
         }
+        payment.setPersonName(fullNameEditText.getText().toString());
         this.paymentsArray.add(payment);
         adapter.notifyDataSetChanged();
         this.payments.add(payment);
+
         realm.beginTransaction();
-        person.setPayments(payments);
-        realm.insertOrUpdate(person);
+        if (person.getPayments() != null) {
+            person.getPayments().add(payment);
+        } else {
+            person.setPayments(payments);
+        }
+
+        realm.copyToRealmOrUpdate(person);
         realm.commitTransaction();
     }
 

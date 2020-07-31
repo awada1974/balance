@@ -6,18 +6,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-
-import java.util.ArrayList;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
 import online.beapp.balance.Adapters.PersonAdapter;
 import online.beapp.balance.entities.Person;
 
-public class MainActivity extends AppCompatActivity {
+public class DashboardActivity extends AppCompatActivity {
 
+    private static final String TAG = DashboardActivity.class.getSimpleName();
     private Button addPerson;
     private ListView personListView;
     private Realm realm;
@@ -30,16 +30,36 @@ public class MainActivity extends AppCompatActivity {
         realm = Realm.getDefaultInstance();
         addPerson = findViewById(R.id.buttonAddRecord);
         personListView = findViewById(R.id.personListView);
+        Button paymentList = findViewById(R.id.buttonPaymentList);
+        paymentList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DashboardActivity.this, PaymentsActivity.class);
+                startActivity(intent);
+            }
+        });
 
         addPerson.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AddPerson.class);
+                Intent intent = new Intent(DashboardActivity.this, AddPerson.class);
                 startActivity(intent);
             }
         });
 
         loadPerson();
+        personListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent personDetailsIntent = new Intent(DashboardActivity.this, AddPerson.class);
+                Person person = personRealmResults.get(position);
+                personDetailsIntent.putExtra("person", person.getId());
+
+                String idString = String.valueOf(person.getId());
+                Log.e(TAG, String.valueOf(person.getId()));
+                startActivity(personDetailsIntent);
+            }
+        });
     }
 
     private void loadPerson() {

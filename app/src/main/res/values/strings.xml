@@ -13,4 +13,9 @@
     <string name="note">Note</string>
     <string name="amount">Amount</string>
     <string name="date">Date</string>
+
+    <array name="currencies">
+        <item>USD</item>
+        <item>LBP</item>
+    </array>
 </resources>
